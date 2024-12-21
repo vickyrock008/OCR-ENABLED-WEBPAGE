@@ -9,3 +9,5 @@ langdetect==1.0.9
 fpdf==1.7.2
 python-docx==0.8.11
 Werkzeug==2.2.3
+python-dotenv==1.0.0
+
