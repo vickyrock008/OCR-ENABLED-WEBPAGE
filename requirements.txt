@@ -3,12 +3,12 @@ Flask-SQLAlchemy==3.0.2
 Flask-WTF==1.0.1
 python-dotenv==1.0.0
 pytesseract==0.3.10
-opencv-python==4.7.0.72
+opencv-python==4.7.0.72  # Ensure this version is compatible with NumPy 1.x
 gTTS==2.3.2
 langdetect==1.0.9
 fpdf==1.7.2
 python-docx==0.8.11
 Werkzeug==2.2.3
-python-dotenv==1.0.0
 gunicorn==20.1.0
-
+numpy<2  # Downgrade NumPy to 1.x to avoid compatibility issues with NumPy 2.x
+pybind11>=2.12  # Ensure pybind11 is installed for compatibility with NumPy and OpenCV
