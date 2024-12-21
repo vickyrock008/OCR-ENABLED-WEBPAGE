@@ -1,24 +1,23 @@
-# Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Set the working directory in the container
-WORKDIR /app
+# Install OpenCV dependencies (libGL.so.1)
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Tesseract OCR and other dependencies
-RUN apt-get update && apt-get install -y tesseract-ocr
+# Install Python dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy the current directory contents into the container at /app
+# Copy your application code
 COPY . /app
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Set the working directory
+WORKDIR /app
 
-# Expose port 10000
-EXPOSE 10000
-
-# Set the Tesseract command and data directory environment variables
-ENV TESSERACT_CMD /usr/bin/tesseract
-ENV TESSDATA_DIR /usr/share/tesseract-ocr/4.00/tessdata
-
-# Run the application using gunicorn
+# Start the app with Gunicorn
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
