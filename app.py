@@ -9,12 +9,17 @@ from fpdf import FPDF
 from docx import Document
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # Use SQLite DB for storing user data
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your_secret_key'
+# Configure app using environment variables
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///users.db')  # Default to SQLite if not set
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', False)
+app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
 
 # Initialize database
 db = SQLAlchemy(app)
@@ -69,13 +74,13 @@ def logout():
     return redirect(url_for('index'))  # Redirect to home page after logout
 
 # Set up Tesseract command path
-pyt.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+pyt.pytesseract.tesseract_cmd = os.getenv('TESSERACT_CMD', 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe')
 
 # Custom Tesseract config
-custom_config = r'--oem 1 --psm 6 --tessdata-dir "C:\\Program Files\\Tesseract-OCR\\tessdata" --dpi 300'
+custom_config = f"--oem 1 --psm 6 --tessdata-dir '{os.getenv('TESSDATA_DIR', 'C:\\Program Files\\Tesseract-OCR\\tessdata')}' --dpi 300"
 
 # Directory to save temporary files
-TEMP_DIR = "temp_files"
+TEMP_DIR = os.getenv('TEMP_DIR', 'temp_files')
 if not os.path.exists(TEMP_DIR):
     os.makedirs(TEMP_DIR)
 
@@ -133,7 +138,6 @@ def image_text_to_audio_route():
     db.session.commit()
 
     return jsonify({"text": text, "audio_url": f"/download_audio/{os.path.basename(audio_path)}"})
-
 
 @app.route('/image_text_to_word', methods=['POST'])
 def image_text_to_word():
