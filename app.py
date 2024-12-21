@@ -77,7 +77,9 @@ def logout():
 pyt.pytesseract.tesseract_cmd = os.getenv('TESSERACT_CMD', 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe')
 
 # Custom Tesseract config
-custom_config = f"--oem 1 --psm 6 --tessdata-dir '{os.getenv('TESSDATA_DIR', 'C:\\Program Files\\Tesseract-OCR\\tessdata')}' --dpi 300"
+tessdata_dir = os.getenv('TESSDATA_DIR', 'C:\\Program Files\\Tesseract-OCR\\tessdata')
+custom_config = f"--oem 1 --psm 6 --tessdata-dir '{tessdata_dir}' --dpi 300"
+
 
 
 
