@@ -73,11 +73,13 @@ def logout():
     session.pop('user_id', None)  # Remove user session
     return redirect(url_for('index'))  # Redirect to home page after logout
 
-# Set up Tesseract command path
-pyt.pytesseract.tesseract_cmd = os.getenv('TESSERACT_CMD', 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe')
+# Set up Tesseract command path for Linux deployment
+# On Render's server, Tesseract is installed at '/usr/bin/tesseract' by default
+pyt.pytesseract.tesseract_cmd = os.getenv('TESSERACT_CMD', '/usr/bin/tesseract')
 
-# Custom Tesseract config
-tessdata_dir = os.getenv('TESSDATA_DIR', 'C:\\Program Files\\Tesseract-OCR\\tessdata')
+# Custom Tesseract config for Linux
+# Render typically uses default tessdata location, but you can customize if needed
+tessdata_dir = os.getenv('TESSDATA_DIR', '/usr/share/tesseract-ocr/4.00/tessdata')
 custom_config = f"--oem 1 --psm 6 --tessdata-dir '{tessdata_dir}' --dpi 300"
 
 
