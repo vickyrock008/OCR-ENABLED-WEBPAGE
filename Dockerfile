@@ -8,12 +8,6 @@ RUN apt-get update && apt-get install -y \
     libgl1 \
     && apt-get clean
 
-# Set the TESSDATA_PREFIX environment variable
-ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata/
-
-# Copy tessdata files to the correct location
-COPY tessdata /usr/share/tesseract-ocr/4.00/tessdata/
-
 # Set the working directory in the container
 WORKDIR /app
 
