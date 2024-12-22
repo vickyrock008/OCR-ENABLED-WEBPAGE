@@ -1,23 +1,23 @@
-FROM python:3.11-slim
+# Use an official Python image as the base
+FROM python:3.10-slim
 
-# Install OpenCV dependencies (libGL.so.1)
+# Install system dependencies and Tesseract
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender1 \
-    && rm -rf /var/lib/apt/lists/*
+    tesseract-ocr \
+    libtesseract-dev \
+    && apt-get clean
 
-# Install Python dependencies
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
-
-# Copy your application code
-COPY . /app
-
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Start the app with Gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
+# Copy the application code
+COPY . /app
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the application port
+EXPOSE 5500
+
+# Command to run the application
+CMD ["python", "app.py"]
